@@ -1,3 +1,4 @@
+import 'package:flutter_crud/models/task.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
@@ -15,13 +16,15 @@ class DatabaseService {
   Future<Database> get database async {
     if (_db != null) return _db!;
     _db = await getDatabase();
+    print('hgfhgffh $_db');
     return _db!;
   }
 
   Future<Database> getDatabase() async {
     final databaseDirPath = await getDatabasesPath();
     final databasePath = join(databaseDirPath, "master_db.db");
-    final database = await openDatabase(databasePath, onCreate: (db, version) {
+    final database =
+        await openDatabase(databasePath, version: 1, onCreate: (db, version) {
       db.execute('''
           CREATE TABLE $_tasksTableName (
             $_tasksIdColumnName INTEGER PRIMARY KEY, 
@@ -39,10 +42,23 @@ class DatabaseService {
     final db = await database;
     await db.insert(
       _tasksTableName,
-      {
-        _tasksContentColumnName: content,
-        _tasksIdColumnName: 0
-      },
+      {_tasksContentColumnName: content, _tasksIdColumnName: 0},
     );
+  }
+
+  Future<List<Task>> getTasks() async {
+    print(await getDatabasesPath());
+    final db = await database;
+    final data = await db.query(_tasksTableName);
+    List<Task> tasks = data
+        .map(
+          (e) => Task(
+              id: e["id"] as int,
+              status: e["status"] as int,
+              content: e["content"] as String,
+          ),
+        )
+        .toList();
+        return tasks;
   }
 }
