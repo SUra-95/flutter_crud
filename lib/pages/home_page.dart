@@ -73,20 +73,20 @@ class _HomePageState extends State<HomePage> {
 
   Widget _tasksList() {
     return FutureBuilder(
-        future: _databaseService.getTasks(),
-        builder: (context, snapshot) {
-          return ListView.builder(
-            itemCount: snapshot.data?.length ?? 0,
-            itemBuilder: (context, index) {
-              Task task = snapshot.data![index];
-              return ListTile(
-                title: Text(
-                  task.content,
-                ),
-              );
-            },
-          );
-          return Container();
-        });
+      future: _databaseService.getTasks(),
+      builder: (context, snapshot) {
+        return ListView.builder(
+          itemCount: snapshot.data?.length ?? 0,
+          itemBuilder: (context, index) {
+            Task task = snapshot.data![index];
+            return ListTile(
+              title: Text(
+                task.content,
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }

@@ -51,7 +51,7 @@ class DatabaseService {
     );
   }
 
-  Future<List<Task>?> getTasks() async {
+  Future<List<Task>> getTasks() async {
     print(await getDatabasesPath());
     final db = await database;
     final data = await db.query(_tasksTableName);
