@@ -80,8 +80,20 @@ class _HomePageState extends State<HomePage> {
           itemBuilder: (context, index) {
             Task task = snapshot.data![index];
             return ListTile(
+              onLongPress: () {
+                _databaseService.deleteTask(task.id);
+                setState(() {});
+              },
               title: Text(
                 task.content,
+              ),
+              trailing: Checkbox(
+                value: task.status == 1,
+                onChanged: (value) {
+                  _databaseService.updateTaskStatus(
+                      task.id, value == true ? 1 : 0);
+                      setState(() {});
+                },
               ),
             );
           },
