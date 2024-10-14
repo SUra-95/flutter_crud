@@ -21,18 +21,23 @@ class DatabaseService {
   }
 
   Future<Database> getDatabase() async {
+    await deleteDatabase(await getDatabasesPath());
+
     final databaseDirPath = await getDatabasesPath();
     final databasePath = join(databaseDirPath, "master_db.db");
-    final database =
-        await openDatabase(databasePath, version: 1, onCreate: (db, version) {
-      db.execute('''
+    final database = await openDatabase(
+      databasePath,
+      version: 1,
+      onCreate: (db, version) {
+        db.execute('''
           CREATE TABLE $_tasksTableName (
             $_tasksIdColumnName INTEGER PRIMARY KEY, 
             $_tasksContentColumnName TEXT NOT NULL,
-            $_tasksStatusColumnName INTEGER NOT NULL,
+            $_tasksStatusColumnName INTEGER NOT NULL
           )
         ''');
-    });
+      },
+    );
     return database;
   }
 
@@ -42,23 +47,24 @@ class DatabaseService {
     final db = await database;
     await db.insert(
       _tasksTableName,
-      {_tasksContentColumnName: content, _tasksIdColumnName: 0},
+      {_tasksContentColumnName: content, _tasksStatusColumnName: 0},
     );
   }
 
-  Future<List<Task>> getTasks() async {
+  Future<List<Task>?> getTasks() async {
     print(await getDatabasesPath());
     final db = await database;
     final data = await db.query(_tasksTableName);
+    print(data);
     List<Task> tasks = data
         .map(
           (e) => Task(
-              id: e["id"] as int,
-              status: e["status"] as int,
-              content: e["content"] as String,
+            id: e["id"] as int,
+            status: e["status"] as int,
+            content: e["content"] as String,
           ),
         )
         .toList();
-        return tasks;
+    return tasks;
   }
 }

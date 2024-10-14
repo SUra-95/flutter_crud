@@ -7,6 +7,4 @@ class Task {
     required this.status,
     required this.content,
   });
-
-  static toList() {}
 }
