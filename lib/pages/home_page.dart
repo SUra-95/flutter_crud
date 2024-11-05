@@ -19,8 +19,8 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text("SQLite"),
       ),
-      floatingActionButton: _addTaskButton(),
       body: _tasksList(),
+      floatingActionButton: _addTaskButton(),
     );
   }
 
@@ -90,9 +90,8 @@ class _HomePageState extends State<HomePage> {
               trailing: Checkbox(
                 value: task.status == 1,
                 onChanged: (value) {
-                  _databaseService.updateTaskStatus(
-                      task.id, value == true ? 1 : 0);
-                      setState(() {});
+                  _databaseService.updateTaskStatus(task.id, value == true ? 1 : 0);
+                  setState(() {});
                 },
               ),
             );
